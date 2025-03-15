@@ -1,8 +1,9 @@
 import express, { Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import { config } from 'dotenv';
-import  dbConnect  from './lib/db';
-import destinationRoutes from './routes/destinations';
+import dbConnect from './lib/db.js';
+import destinationRoutes from './routes/destinations.js';
+import userRoutes from './routes/userRoutes.js';
 
 config(); // Load environment variables
 
@@ -20,6 +21,7 @@ app.use(express.json());
 
 // Routes
 app.use('/api/destinations', destinationRoutes);
+app.use('/api/users', userRoutes);
 
 // Health check endpoint
 app.get('/api/health', (_req: Request, res: Response) => {
