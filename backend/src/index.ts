@@ -1,8 +1,15 @@
-import { NextResponse } from 'next/server';
-import dbConnect from '@/lib/db';
-import Destination from '@/models/Destination';
+import express, { Request, Response } from 'express';
+import cors from 'cors';
+import dbConnect from './lib/db';
+import Destination from './models/Destination';
 
-export async function GET() {
+const app = express();
+const port = process.env.PORT || 3001;
+
+app.use(cors());
+app.use(express.json());
+
+app.get('/api/destinations/random', async (req: Request, res: Response) => {
   try {
     await dbConnect();
 
@@ -15,24 +22,25 @@ export async function GET() {
     const otherDestinations = await Destination.aggregate([
       { $match: { _id: { $ne: destination._id } } },
       { $sample: { size: 3 } },
-      { $project: { name: 1 } }
+      { $project: { city: 1 } }
     ]);
 
     // Combine and shuffle options
     const options = [
-      destination.name,
-      ...otherDestinations.map(d => d.name)
+      destination.city,
+      ...otherDestinations.map(d => d.city)
     ].sort(() => Math.random() - 0.5);
 
-    return NextResponse.json({
+    res.json({
       destination,
       options
     });
   } catch (error) {
     console.error('Error fetching random destination:', error);
-    return NextResponse.json(
-      { error: 'Failed to fetch destination' },
-      { status: 500 }
-    );
+    res.status(500).json({ error: 'Failed to fetch destination' });
   }
-} 
+});
+
+app.listen(port, () => {
+  console.log(`Backend server running on port ${port}`);
+}); 
