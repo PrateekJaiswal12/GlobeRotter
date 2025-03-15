@@ -24,7 +24,7 @@ A fun and engaging travel quiz web application where users guess destinations ba
 
 1. Clone the repository
 ```bash
-git clone https://github.com/yourusername/globetrotter.git
+git clone https://github.com/PrateekJaiswal12/globetrotter.git
 cd globetrotter
 ```
 
