@@ -54,31 +54,39 @@ npm run dev
 globetrotter/
 ├── backend/
 │   ├── src/
-│   │   ├── index.ts           # Main backend server file
+│   │   ├── index.ts                    # Main Express server
+│   │   ├── controllers/
+│   │   │   ├── destinationController.ts # Destination endpoints
+│   │   │   └── userController.ts       # User management
 │   │   ├── models/
-│   │   │   └── Destination.ts # Destination model
+│   │   │   ├── Destination.ts          # Destination schema
+│   │   │   └── User.ts                 # User schema
+│   │   ├── routes/
+│   │   │   ├── destinations.ts         # Destination routes
+│   │   │   └── userRoutes.ts          # User routes
 │   │   ├── lib/
-│   │   │   └── db.ts         # Database connection
+│   │   │   └── db.ts                  # MongoDB connection
 │   │   └── scripts/
-│   │       └── seed.ts       # Database seeding script
+│   │       └── seed.ts                # Database seeder
 │   ├── package.json
 │   └── tsconfig.json
 ├── frontend/
 │   ├── src/
-│   │   └── app/
-│   │       ├── page.tsx      # Main game page
-│   │       ├── layout.tsx    # Root layout
-│   │       └── api/
-│   │           └── destinations/
-│   │               └── random/
-│   │                   └── route.ts
+│   │   ├── app/
+│   │   │   ├── page.tsx               # Home page
+│   │   │   ├── layout.tsx            # Root layout
+│   │   │   └── game/
+│   │   │       └── page.tsx          # Game component
+│   │   ├── components/
+│   │   │   ├── Game.tsx             # Game logic
+│   │   │   └── UserScore.tsx        # Score display
+│   │   └── models/
+│   │       └── User.ts              # User type definitions
 │   ├── package.json
 │   ├── tsconfig.json
 │   ├── tailwind.config.js
 │   └── postcss.config.js
-├── package.json              # Root package.json for workspaces
-├── .env.local               # Environment variables
-└── .gitignore
+└── README.md
 ```
 
 ## 🧪 Testing
