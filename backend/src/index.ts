@@ -1,46 +1,43 @@
-import express, { Request, Response } from 'express';
+import express, { Request, Response, NextFunction } from 'express';
 import cors from 'cors';
-import dbConnect from './lib/db';
-import Destination from './models/Destination';
+import { config } from 'dotenv';
+import  dbConnect  from './lib/db';
+import destinationRoutes from './routes/destinations';
+
+config(); // Load environment variables
 
 const app = express();
 const port = process.env.PORT || 3001;
 
-app.use(cors());
+// CORS configuration
+app.use(cors({
+  origin: process.env.CORS_ORIGIN || 'http://localhost:3000',
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
+
 app.use(express.json());
 
-app.get('/api/destinations/random', async (req: Request, res: Response) => {
-  try {
-    await dbConnect();
+// Routes
+app.use('/api/destinations', destinationRoutes);
 
-    // Get random destination
-    const count = await Destination.countDocuments();
-    const random = Math.floor(Math.random() * count);
-    const destination = await Destination.findOne().skip(random);
-
-    // Get 3 other random destinations for options
-    const otherDestinations = await Destination.aggregate([
-      { $match: { _id: { $ne: destination._id } } },
-      { $sample: { size: 3 } },
-      { $project: { city: 1 } }
-    ]);
-
-    // Combine and shuffle options
-    const options = [
-      destination.city,
-      ...otherDestinations.map(d => d.city)
-    ].sort(() => Math.random() - 0.5);
-
-    res.json({
-      destination,
-      options
-    });
-  } catch (error) {
-    console.error('Error fetching random destination:', error);
-    res.status(500).json({ error: 'Failed to fetch destination' });
-  }
+// Health check endpoint
+app.get('/api/health', (_req: Request, res: Response) => {
+  res.json({ status: 'ok' });
 });
 
-app.listen(port, () => {
-  console.log(`Backend server running on port ${port}`);
+// Error handling middleware
+app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
+  console.error(err.stack);
+  res.status(500).json({ error: 'Something went wrong!' });
+});
+
+// Connect to MongoDB and start server
+dbConnect().then(() => {
+  app.listen(port, () => {
+    console.log(`Server is running on port ${port}`);
+  });
+}).catch((error) => {
+  console.error('Failed to connect to MongoDB:', error);
+  process.exit(1);
 }); 
