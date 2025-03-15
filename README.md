@@ -52,14 +52,33 @@ npm run dev
 
 ```
 globetrotter/
-├── src/
-│   ├── app/              # Next.js 13+ App Router
-│   ├── components/       # Reusable UI components
-│   ├── lib/             # Utility functions and helpers
-│   ├── models/          # Database models
-│   └── types/           # TypeScript type definitions
-├── public/              # Static assets
-└── ...config files
+├── backend/
+│   ├── src/
+│   │   ├── index.ts           # Main backend server file
+│   │   ├── models/
+│   │   │   └── Destination.ts # Destination model
+│   │   ├── lib/
+│   │   │   └── db.ts         # Database connection
+│   │   └── scripts/
+│   │       └── seed.ts       # Database seeding script
+│   ├── package.json
+│   └── tsconfig.json
+├── frontend/
+│   ├── src/
+│   │   └── app/
+│   │       ├── page.tsx      # Main game page
+│   │       ├── layout.tsx    # Root layout
+│   │       └── api/
+│   │           └── destinations/
+│   │               └── random/
+│   │                   └── route.ts
+│   ├── package.json
+│   ├── tsconfig.json
+│   ├── tailwind.config.js
+│   └── postcss.config.js
+├── package.json              # Root package.json for workspaces
+├── .env.local               # Environment variables
+└── .gitignore
 ```
 
 ## 🧪 Testing
