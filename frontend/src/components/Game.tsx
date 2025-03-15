@@ -24,7 +24,7 @@ export default function Game({ username }: GameProps) {
 
   const fetchDestination = async () => {
     try {
-      const response = await fetch('/api/destinations/random');
+      const response = await fetch(`http://localhost:3001/api/destinations/random`);
       const data = await response.json();
       
       if (!response.ok) throw new Error(data.error);

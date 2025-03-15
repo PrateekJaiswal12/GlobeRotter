@@ -1,5 +1,5 @@
-import dbConnect from '../lib/db';
-import Destination from '../models/Destination';
+import dbConnect from '../lib/db.js';
+import Destination from '../models/Destination.js';
 
 const destinations = [
   {

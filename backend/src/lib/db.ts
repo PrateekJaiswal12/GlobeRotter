@@ -1,44 +1,14 @@
 import mongoose from 'mongoose';
 
-interface MongooseCache {
-  conn: mongoose.Mongoose | null;
-  promise: Promise<mongoose.Mongoose> | null;
-}
-
-const globalWithMongoose = global as typeof global & {
-  mongoose: MongooseCache;
-};
-
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/globetrotter';
-
-if (!globalWithMongoose.mongoose) {
-  globalWithMongoose.mongoose = {
-    conn: null,
-    promise: null
-  };
-}
-
-async function dbConnect() {
-  if (globalWithMongoose.mongoose.conn) {
-    return globalWithMongoose.mongoose.conn;
-  }
-
-  if (!globalWithMongoose.mongoose.promise) {
-    const opts = {
-      bufferCommands: false,
-    };
-
-    globalWithMongoose.mongoose.promise = mongoose.connect(MONGODB_URI, opts);
-  }
-  
+const dbConnect = async () => {
   try {
-    globalWithMongoose.mongoose.conn = await globalWithMongoose.mongoose.promise;
-  } catch (e) {
-    globalWithMongoose.mongoose.promise = null;
-    throw e;
+    const uri = process.env.MONGODB_URI || 'mongodb://localhost:27017/globetrotter';
+    await mongoose.connect(uri);
+    console.log('Connected to MongoDB');
+  } catch (error) {
+    console.error('MongoDB connection error:', error);
+    process.exit(1);
   }
-
-  return globalWithMongoose.mongoose.conn;
-}
+};
 
 export default dbConnect; 
